@@ -4,21 +4,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Document</title>
 </head>
 <body>
-    <input type="text" placeholder="username" id="user">
-    <input type="text" placeholder="password" id="pass">
+    <input type="text" placeholder="email" id="email">
+    <input type="password" placeholder="password" id="pass">
     <button onclick="send()">Sing In</button>
 </body>
 </html>
 
 <script>
     function send(){
-        user=$("user").val
-        user=$("pass").val
-        $.post("",{
-
+        email=$("#email").val();
+        pass=$("#pass").val();
+        console.log(email);
+        console.log(pass);
+        data = {
+            email:email,
+            pass:pass
+        }
+        /*
+        axios.request({
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            method:'post',
+            url:"http://localhost:9000/.netlify/functions/index/singin",
+            data:data
+        });
+        */
+        $.post("http://localhost:9000/.netlify/functions/index/singin",data,
+        function(data){
+            alert(data)
         });
     }
 </script>
