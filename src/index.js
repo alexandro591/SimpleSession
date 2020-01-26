@@ -41,7 +41,7 @@ router.post("/signin",function(request,response){
             })
         }
         else{
-            response.write("that account already exist");
+            response.write("that email is being used by another account");
             response.end();
         }
     });
