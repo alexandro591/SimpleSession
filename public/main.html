@@ -9,7 +9,7 @@
 </head>
 <body>
     <span id="welcomeMessage"></span>
-    <button onclick="send()">Log out</button>
+    <button onclick="send()" id="btn">Log out</button>
 </body>
 </html>
 
@@ -28,6 +28,7 @@
             $("#welcomeMessage").html("\
                 There is no session, please sign in<br>"
             )
+            $("#btn").html("Login")
         }
     });
     function send(){
