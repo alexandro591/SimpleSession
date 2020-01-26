@@ -1,0 +1,40 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="cookieHandle.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" placeholder="email" id="email">
+    <input type="password" placeholder="password" id="pass">
+    <button onclick="send()">Log in</button>
+</body>
+</html>
+
+<script>
+    deleteAllCookies()
+    function send(){
+        email=$("#email").val();
+        pass=$("#pass").val();
+        console.log(email);
+        console.log(pass);
+        data = {
+            email:email,
+            pass:pass
+        }
+        $.post("http://localhost:9000/.netlify/functions/index/login",data,
+        function(data){
+            if(data.includes("sessionID=")){
+                document.cookie = data;
+                window.location.href="file:///C:/Users/Alexandro/Desktop/sessions/main.html"
+            }
+            else{
+                window.alert(data)
+            }
+        });
+    }
+    
+</script>

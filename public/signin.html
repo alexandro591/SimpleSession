@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="cookieHandle.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" placeholder="nombre" id="name"><br>
+    <input type="text" placeholder="apellido" id="sname"><br>
+    <input type="text" placeholder="cédula" id="ci"><br>
+    <input type="text" placeholder="email" id="email"><br>
+    <input type="text" placeholder="teléfono" id="phone"><br>
+    <input type="password" placeholder="password" id="pass"><br>
+    <button onclick="send()">Sing In</button><br>
+</body>
+</html>
+
+<script>
+    function send(){
+        name=$("#name").val();
+        sname=$("#sname").val();
+        ci=$("#ci").val();
+        email=$("#email").val();
+        phone=$("#phone").val();
+        pass=$("#pass").val();
+        data = {
+            name:name,
+            sname:sname,
+            ci:ci,
+            email:email,
+            phone:phone,
+            pass:pass
+        }
+        $.post("http://localhost:9000/.netlify/functions/index/signin",data,
+        function(data){
+            alert(data)
+        });
+    }
+</script>

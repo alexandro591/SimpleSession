@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="cookieHandle.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <span id="welcomeMessage"></span>
+    <button onclick="send()">Log out</button>
+</body>
+</html>
+
+<script>
+    getParams()
+    .then(params=>{
+        credentials = params;
+        if(params!=="null"){
+            $("#welcomeMessage").html("\
+                welcome "+params.name+" <br>\
+                your credentials are: <br>"
+                +JSON.stringify(params)+"<br>"
+            )
+        }
+        else{
+            $("#welcomeMessage").html("\
+                There is no session, please sign in<br>"
+            )
+        }
+    });
+    function send(){
+        credentials=credentials.email.split("@");
+        $.post("http://localhost:9000/.netlify/functions/index/deleteCookie",{
+            name:credentials[0].toLowerCase()+credentials[1].replace(".","*").toUpperCase()
+        },
+        function(data){
+            deleteAllCookies();
+            window.location.href="file:///C:/Users/Alexandro/Desktop/sessions/login.html"
+        })
+    }
+</script>
