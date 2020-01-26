@@ -31,13 +31,18 @@
         }
     });
     function send(){
-        credentials=credentials.email.split("@");
-        $.post("https://sessionhandle.netlify.com/.netlify/functions/index/deleteCookie",{
-            name:credentials[0].toLowerCase()+credentials[1].replace(".","*").toUpperCase()
-        },
-        function(data){
+        try {
+            credentials=credentials.email.split("@");
+            $.post("https://sessionhandle.netlify.com/.netlify/functions/index/deleteCookie",{
+                name:credentials[0].toLowerCase()+credentials[1].replace(".","*").toUpperCase()
+            },
+            function(data){
+                deleteAllCookies();
+                window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html"
+            })
+        } catch{
             deleteAllCookies();
-            window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html"
-        })
+            window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html" 
+        }
     }
 </script>
