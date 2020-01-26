@@ -36,7 +36,13 @@
         }
         $.post("https://sessionhandle.netlify.com/.netlify/functions/index/signin",data,
         function(data){
-            alert(data)
+            if(data==="success"){
+                alert("Registration successful. You will be redirected to the login menu")
+                window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html"
+            }
+            else{
+                alert(data)
+            }
         });
     }
 </script>
