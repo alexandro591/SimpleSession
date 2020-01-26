@@ -25,11 +25,11 @@
             email:email,
             pass:pass
         }
-        $.post("http://localhost:9000/.netlify/functions/index/login",data,
+        $.post("https://sessionhandle.netlify.com/.netlify/functions/index/login",data,
         function(data){
             if(data.includes("sessionID=")){
                 document.cookie = data;
-                window.location.href="file:///C:/Users/Alexandro/Desktop/sessions/main.html"
+                window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html"
             }
             else{
                 window.alert(data)

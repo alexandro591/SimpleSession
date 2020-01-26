@@ -32,12 +32,12 @@
     });
     function send(){
         credentials=credentials.email.split("@");
-        $.post("http://localhost:9000/.netlify/functions/index/deleteCookie",{
+        $.post("https://sessionhandle.netlify.com/.netlify/functions/index/deleteCookie",{
             name:credentials[0].toLowerCase()+credentials[1].replace(".","*").toUpperCase()
         },
         function(data){
             deleteAllCookies();
-            window.location.href="file:///C:/Users/Alexandro/Desktop/sessions/login.html"
+            window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html"
         })
     }
 </script>
