@@ -7,6 +7,7 @@
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
+    "googleapis": "^47.0.0",
     "netlify-lambda": "^1.6.3",
     "random-id": "^1.0.3",
     "serverless-http": "^2.3.1"

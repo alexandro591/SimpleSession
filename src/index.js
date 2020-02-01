@@ -6,6 +6,30 @@ const bodyParser = require('body-parser');
 const axios = require("axios");
 const randomId = require('random-id');
 
+
+
+
+var accessToken;
+
+var {google} = require("googleapis");
+var serviceAccount = require("./appkey.json");
+var scopes = [
+  "https://www.googleapis.com/auth/userinfo.email",
+  "https://www.googleapis.com/auth/firebase.database"
+];
+
+var jwtClient = new google.auth.JWT(
+  serviceAccount.client_email,
+  null,
+  serviceAccount.private_key,
+  scopes
+);
+
+jwtClient.authorize(function(error, tokens) {
+    accessToken = tokens.access_token;
+});
+
+
 simpleSession.use(bodyParser.json());
 simpleSession.use(bodyParser.urlencoded({ extended: true }));
 simpleSession.use(function(req, res, next) {
@@ -19,17 +43,51 @@ urlDatabase = "https://simplesession-43caf.firebaseio.com"
 
 //get main route
 router.get("/",(request,response)=>{
+
 });
 
 //signin function
 router.post("/signin",function(request,response){
-    var email = request.body.email.toLowerCase().split("@");
-    var user = email[0];
-    var emailProvider = email[1].toUpperCase().replace(/\./g,"*");
+      
+    //email handle
+    try {
+        var email = request.body.email.toLowerCase().split("@");
+        var user = email[0];
+        var emailProvider = email[1].toUpperCase().replace(/\./g,"*");
+    } catch {
+        response.write("Ingresa un email válido");
+        response.end();
+        return null;
+    }
 
-    data = request.body
+    nombre=request.body.nombre;
+    apellido=request.body.apellido;
+    cedula=request.body.cedula;
+    telefono=request.body.telefono;
+    email=request.body.email;
+    password1=request.body.password1;
+    password2=request.body.password2;
 
-    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json";
+    if(nombre==="" || apellido==="" || cedula==="" || telefono==="" || email==="" || password1==="" || password2==="" ){
+        response.write("Ingrese todos los parámetros");
+        response.end();
+        return null;
+    }
+    else if(password1!==password2){
+        response.write("Las contraseñas no son idénticas");
+        response.end();
+        return null;
+    }
+    data={
+        nombre:nombre,
+        apellido:apellido,
+        cedula:cedula,
+        telefono:telefono,
+        email:email,
+        password:password1,
+    }
+
+    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+accessToken;
 
     axios.get(urlaccounts)
     .then(body=>{
@@ -38,13 +96,16 @@ router.post("/signin",function(request,response){
             .then(()=>{
                 response.write("success");
                 response.end();
+                return null;
             })
         }
         else{
             response.write("that email is being used by another account");
             response.end();
+            return null;
         }
     });
+
 });
 
 //login function
@@ -52,29 +113,35 @@ router.post("/login",function(request,response){
     var email = request.body.email.toLowerCase().split("@");
     var user = email[0];
     var emailProvider = email[1].toUpperCase().replace(/\./g,"*");
-    var pass = request.body.pass;
+    var password = request.body.password;
 
-    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json";
+    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+accessToken;
 
     axios.get(urlaccounts)
     .then(body=>{
         if(body.data!==null){
-            if(body.data.pass===pass){
+            if(body.data.password===password){
                 var cookie = randomId()
-                axios.put(urlaccounts.substring(0,urlaccounts.length-5)+"/cookie.json",{value:cookie})
+                
+                var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+accessToken;
+
+                axios.put(urlaccounts,{value:cookie})
                 .then(()=>{
                     response.write("sessionID="+cookie+";");
                     response.end();
+                    return null;
                 })
             }
             else{
                 response.write("wrong password");
                 response.end();
+                return null;
             }
         }
         else{
             response.write("that user does not exist");
             response.end();
+            return null;
         }
     })
 });
@@ -85,8 +152,8 @@ router.post("/main",function(request,response){
     console.log(cookieClient);
     cookieClient = cookieClient[0].replace("sessionID=","");
 
-    var urlaccounts=urlDatabase+"/accounts.json";
-
+    var urlaccounts=urlDatabase+"/accounts.json?access_token="+accessToken;
+    console.log(urlaccounts)
     axios.get(urlaccounts)
     .then(body=>{
         var nItems = Object.keys(body.data).length;
@@ -116,7 +183,13 @@ router.post("/main",function(request,response){
 
 //deleteCookie
 router.post("/deleteCookie",function(request,response){
-    axios.delete(urlDatabase+"/accounts/"+request.body.name+"/cookie.json")
+    var email = request.body.email.toLowerCase().split("@");
+    var user = email[0];
+    var emailProvider = email[1].toUpperCase().replace(/\./g,"*");
+
+    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+accessToken;
+
+    axios.delete(urlaccounts)
     response.write("ok")
     response.end()
 });
