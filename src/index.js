@@ -1,10 +1,10 @@
-const express = require("express");
-const serverless = require("serverless-http");
-const simpleSession = express();
-const router = express.Router();
-const bodyParser = require('body-parser');
-const axios = require("axios");
-const randomId = require('random-id');
+var express = require("express");
+var serverless = require("serverless-http");
+var simpleSession = express();
+var router = express.Router();
+var bodyParser = require('body-parser');
+var axios = require("axios");
+var randomId = require('random-id');
 
 simpleSession.use(bodyParser.json());
 simpleSession.use(bodyParser.urlencoded({ extended: true }));
@@ -32,14 +32,32 @@ var jwtClient = new google.auth.JWT(
 );
 
 jwtClient.authorize(function(error, tokens) {
+    
     accessToken = tokens.access_token;
+
+    simpleSession.use(bodyParser.json());
+    simpleSession.use(bodyParser.urlencoded({ extended: true }));
+    simpleSession.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Content-Type", "text/plain");
+    next();
+});
+
 });
 
 urlDatabase = "https://simplesession-43caf.firebaseio.com"
 
 //get main route
 router.get("/",(request,response)=>{
+    response.write("Service running");
+    response.end();
 
+    jwtClient.authorize(function(error, tokens) {
+        accessToken = tokens.access_token;
+    });
+
+    return null;
 });
 
 //signin function
