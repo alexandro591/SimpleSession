@@ -13,7 +13,8 @@
     <input type="text" placeholder="cédula" id="ci"><br>
     <input type="text" placeholder="email" id="email"><br>
     <input type="text" placeholder="teléfono" id="phone"><br>
-    <input type="password" placeholder="password" id="pass"><br>
+    <input type="password" placeholder="password" id="password1"><br>
+    <input type="password" placeholder="password confirmation" id="password2"><br>
     <button onclick="send()">Sing In</button><br>
 </body>
 </html>
@@ -25,14 +26,16 @@
         ci=$("#ci").val();
         email=$("#email").val();
         phone=$("#phone").val();
-        pass=$("#pass").val();
+        password1=$("#password1").val();
+        password2=$("#password2").val();
         data = {
             name:name,
             sname:sname,
             ci:ci,
             email:email,
             phone:phone,
-            pass:pass
+            password1:password1,
+            password2:password2
         }
         $.post("https://sessionhandle.netlify.com/.netlify/functions/index/signin",data,
         function(data){

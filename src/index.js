@@ -35,7 +35,7 @@ simpleSession.use(bodyParser.urlencoded({ extended: true }));
 simpleSession.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Content-Type", "text/plain")
+    res.header("Content-Type", "text/plain");
     next();
 });
 
@@ -60,15 +60,15 @@ router.post("/signin",function(request,response){
         return null;
     }
 
-    nombre=request.body.nombre;
-    apellido=request.body.apellido;
-    cedula=request.body.cedula;
-    telefono=request.body.telefono;
+    name=request.body.name;
+    sname=request.body.sname;
+    ci=request.body.ci;
+    phone=request.body.phone;
     email=request.body.email;
     password1=request.body.password1;
     password2=request.body.password2;
 
-    if(nombre==="" || apellido==="" || cedula==="" || telefono==="" || email==="" || password1==="" || password2==="" ){
+    if(name==="" || sname==="" || ci==="" || phone==="" || email==="" || password1==="" || password2==="" ){
         response.write("Ingrese todos los parámetros");
         response.end();
         return null;
@@ -79,10 +79,10 @@ router.post("/signin",function(request,response){
         return null;
     }
     data={
-        nombre:nombre,
-        apellido:apellido,
-        cedula:cedula,
-        telefono:telefono,
+        name:name,
+        sname:sname,
+        ci:ci,
+        phone:phone,
         email:email,
         password:password1,
     }
@@ -121,7 +121,7 @@ router.post("/login",function(request,response){
     .then(body=>{
         if(body.data!==null){
             if(body.data.password===password){
-                var cookie = randomId()
+                var cookie = randomId();
                 
                 var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+accessToken;
 
@@ -153,7 +153,7 @@ router.post("/main",function(request,response){
     cookieClient = cookieClient[0].replace("sessionID=","");
 
     var urlaccounts=urlDatabase+"/accounts.json?access_token="+accessToken;
-    console.log(urlaccounts)
+    console.log(urlaccounts);
     axios.get(urlaccounts)
     .then(body=>{
         var nItems = Object.keys(body.data).length;
@@ -161,23 +161,23 @@ router.post("/main",function(request,response){
             try{
                 var client=Object.keys(body.data)[i].toString();
                 cookieServer=body.data[client].cookie.value;
-                console.log(cookieServer)
-                console.log(cookieClient)
+                console.log(cookieServer);
+                console.log(cookieClient);
                 if(cookieServer===cookieClient){
-                    params = body.data[client]
+                    params = body.data[client];
                     console.log(params);
                     response.header("Content-Type", "application/json");
                     response.write(JSON.stringify(params));
                     response.end();
-                    return null
+                    return null;
                 }
             }
             catch{
             }
         }
-        response.write("null")
-        response.end()
-        return null
+        response.write("null");
+        response.end();
+        return null;
     });
 });
 
@@ -189,9 +189,10 @@ router.post("/deleteCookie",function(request,response){
 
     var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+accessToken;
 
-    axios.delete(urlaccounts)
-    response.write("ok")
-    response.end()
+    axios.delete(urlaccounts);
+    response.write("ok");
+    response.end();
+    return null;
 });
 
 simpleSession.use("/.netlify/functions/index",router);
