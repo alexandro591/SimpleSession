@@ -32,37 +32,28 @@ var jwtClient = new google.auth.JWT(
 );
 
 jwtClient.authorize(function(error, tokens) {
-    
     accessToken = tokens.access_token;
-
-    simpleSession.use(bodyParser.json());
-    simpleSession.use(bodyParser.urlencoded({ extended: true }));
-    simpleSession.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Content-Type", "text/plain");
-    next();
-});
-
 });
 
 urlDatabase = "https://simplesession-43caf.firebaseio.com"
 
 //get main route
 router.get("/",(request,response)=>{
+    response.header("Access-Control-Allow-Origin", "*");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    response.header("Content-Type", "text/plain");
+    
     response.write("Service running");
     response.end();
-
-    jwtClient.authorize(function(error, tokens) {
-        accessToken = tokens.access_token;
-    });
-
     return null;
 });
 
 //signin function
 router.post("/signin",function(request,response){
-      
+    response.header("Access-Control-Allow-Origin", "*");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    response.header("Content-Type", "text/plain");
+
     //email handle
     try {
         var email = request.body.email.toLowerCase().split("@");
@@ -124,6 +115,10 @@ router.post("/signin",function(request,response){
 
 //login function
 router.post("/login",function(request,response){
+    response.header("Access-Control-Allow-Origin", "*");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    response.header("Content-Type", "text/plain");
+
     var email = request.body.email.toLowerCase().split("@");
     var user = email[0];
     var emailProvider = email[1].toUpperCase().replace(/\./g,"*");
@@ -162,6 +157,10 @@ router.post("/login",function(request,response){
 
 //main function
 router.post("/main",function(request,response){
+    response.header("Access-Control-Allow-Origin", "*");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    response.header("Content-Type", "text/plain");
+
     var cookieClient = request.body.cookie.split(";");
     console.log(cookieClient);
     cookieClient = cookieClient[0].replace("sessionID=","");
@@ -197,6 +196,10 @@ router.post("/main",function(request,response){
 
 //deleteCookie
 router.post("/deleteCookie",function(request,response){
+    response.header("Access-Control-Allow-Origin", "*");
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    response.header("Content-Type", "text/plain");
+
     var email = request.body.email.toLowerCase().split("@");
     var user = email[0];
     var emailProvider = email[1].toUpperCase().replace(/\./g,"*");
