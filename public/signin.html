@@ -37,11 +37,11 @@
             password1:password1,
             password2:password2
         }
-        $.post("https://sessionhandle.netlify.com/.netlify/functions/index/signin",data,
+        $.post("https://sessionhandle.netlify.com/.netlify/functions/signup",data,
         function(data){
             if(data==="success"){
                 alert("Registration successful. You will be redirected to the login menu")
-                window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html"
+                window.location.href="/login"
             }
             else{
                 alert(data)

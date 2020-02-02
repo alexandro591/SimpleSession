@@ -4,7 +4,6 @@ var simpleSession = express();
 var router = express.Router();
 var bodyParser = require('body-parser');
 var axios = require("axios");
-var randomId = require('random-id');
 
 simpleSession.use(bodyParser.json());
 simpleSession.use(bodyParser.urlencoded({ extended: true }));
@@ -45,7 +44,7 @@ router.get("/",(request,response)=>{
     return null;
 });
 
-//login function
+//signin function
 router.post("/",function(request,response){
     //email handle
     try {
@@ -58,39 +57,53 @@ router.post("/",function(request,response){
         return null;
     }
 
-    var password = request.body.password;
+    name=request.body.name;
+    sname=request.body.sname;
+    ci=request.body.ci;
+    phone=request.body.phone;
+    email=request.body.email;
+    password1=request.body.password1;
+    password2=request.body.password2;
+
+    if(name==="" || sname==="" || ci==="" || phone==="" || email==="" || password1==="" || password2==="" ){
+        response.write("Ingrese todos los parámetros");
+        response.end();
+        return null;
+    }
+    else if(password1!==password2){
+        response.write("Las contraseñas no son idénticas");
+        response.end();
+        return null;
+    }
+    data={
+        name:name,
+        sname:sname,
+        ci:ci,
+        phone:phone,
+        email:email,
+        password:password1,
+    }
 
     var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+accessToken;
 
     axios.get(urlaccounts)
     .then(body=>{
-        if(body.data!==null){
-            if(body.data.password===password){
-                var cookie = randomId();
-                
-                var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+accessToken;
-
-                axios.put(urlaccounts,{value:cookie})
-                .then(()=>{
-                    response.write("sessionID="+cookie+";");
-                    response.end();
-                    return null;
-                })
-            }
-            else{
-                response.write("wrong password");
+        if(body.data===null){
+            axios.put(urlaccounts,data)
+            .then(()=>{
+                response.write("success");
                 response.end();
                 return null;
-            }
+            })
         }
         else{
-            response.write("that user does not exist");
+            response.write("that email is being used by another account");
             response.end();
             return null;
         }
-    })
+    });
 });
 
-simpleSession.use("/.netlify/functions/login",router);
+simpleSession.use("/.netlify/functions/signup",router);
 
 module.exports.handler = serverless(simpleSession);
