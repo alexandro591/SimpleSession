@@ -6,8 +6,14 @@ const bodyParser = require('body-parser');
 const axios = require("axios");
 const randomId = require('random-id');
 
-
-
+simpleSession.use(bodyParser.json());
+simpleSession.use(bodyParser.urlencoded({ extended: true }));
+simpleSession.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Content-Type", "text/plain");
+    next();
+});
 
 var accessToken;
 
@@ -27,16 +33,6 @@ var jwtClient = new google.auth.JWT(
 
 jwtClient.authorize(function(error, tokens) {
     accessToken = tokens.access_token;
-});
-
-
-simpleSession.use(bodyParser.json());
-simpleSession.use(bodyParser.urlencoded({ extended: true }));
-simpleSession.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Content-Type", "text/plain");
-    next();
 });
 
 urlDatabase = "https://simplesession-43caf.firebaseio.com"
