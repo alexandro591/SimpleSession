@@ -9,11 +9,10 @@ var randomId = require('random-id');
 simpleSession.use(bodyParser.json());
 simpleSession.use(bodyParser.urlencoded({ extended: true }));
 simpleSession.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Content-Type", "text/plain");
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.header('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); // If needed
+    res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
 
@@ -47,7 +46,7 @@ router.get("/",(request,response)=>{
 });
 
 //login function
-router.post("/login",function(request,response){
+router.post("/",function(request,response){
     //email handle
     try {
         var email = request.body.email.toLowerCase().split("@");
@@ -58,7 +57,7 @@ router.post("/login",function(request,response){
         response.end();
         return null;
     }
-    
+
     var password = request.body.password;
 
     var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+accessToken;
