@@ -12,6 +12,8 @@ simpleSession.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Content-Type", "text/plain");
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.header('Access-Control-Allow-Credentials', true);
     next();
 });
 
@@ -42,6 +44,8 @@ router.get("/",(request,response)=>{
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     response.header("Content-Type", "text/plain");
+    response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    response.header('Access-Control-Allow-Credentials', true);
     
     response.write("Service running");
     response.end();
@@ -53,6 +57,8 @@ router.post("/signin",function(request,response){
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     response.header("Content-Type", "text/plain");
+    response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    response.header('Access-Control-Allow-Credentials', true);
 
     //email handle
     try {
@@ -118,6 +124,8 @@ router.post("/login",function(request,response){
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     response.header("Content-Type", "text/plain");
+    response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    response.header('Access-Control-Allow-Credentials', true);
 
     var email = request.body.email.toLowerCase().split("@");
     var user = email[0];
@@ -160,6 +168,8 @@ router.post("/main",function(request,response){
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     response.header("Content-Type", "text/plain");
+    response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    response.header('Access-Control-Allow-Credentials', true);
 
     var cookieClient = request.body.cookie.split(";");
     console.log(cookieClient);
@@ -199,6 +209,8 @@ router.post("/deleteCookie",function(request,response){
     response.header("Access-Control-Allow-Origin", "*");
     response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     response.header("Content-Type", "text/plain");
+    response.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    response.header('Access-Control-Allow-Credentials', true);
 
     var email = request.body.email.toLowerCase().split("@");
     var user = email[0];
