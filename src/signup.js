@@ -125,7 +125,7 @@ router.post("/",function(request,response){
                                 })
                             }
                             else{
-                                errors.email="Esta cédula está siendo usada por otro usuario"
+                                errors.ci="Esta cédula está siendo usada por otro usuario"
                                 response.status(404).json(errors);;
                                 response.end();
                                 return null;
