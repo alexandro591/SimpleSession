@@ -74,7 +74,7 @@ router.post("/",function(request,response){
     if(phone.length!==10 || phone.substr(0,2)!=="09" ){
         errors.phone="Ingrese un teléfono válido";
     }
-    if(password1!==password2 || password1.length<6 ||  password2.length<6 || password1==="" || password2==="" || pass){
+    if(password1!==password2 || password1.length<6 ||  password2.length<6 || password1==="" || password2===""){
         errors.password1="Las contraseñas deben ser idénticas y deben incluir al menos 6 caracteres";
         errors.password2="Las contraseñas deben ser idénticas y deben incluir al menos 6 caracteres";
     }
