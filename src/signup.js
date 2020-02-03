@@ -71,10 +71,10 @@ router.post("/",function(request,response){
     if(ci.length!==10){
         errors.ci="Ingrese una cédula correcta";
     }
-    if(phone.length!==10 && phone.substr(0,2)!=="09" ){
+    if(phone.length!==10 || phone.substr(0,2)!=="09" ){
         errors.phone="Ingrese un teléfono válido";
     }
-    if(password1!==password2 || password1.length<6){
+    if(password1!==password2 || password1.length<6 ||  password2.length<6 || password1==="" || password2==="" || pass){
         errors.password1="Las contraseñas deben ser idénticas y deben incluir al menos 6 caracteres";
         errors.password2="Las contraseñas deben ser idénticas y deben incluir al menos 6 caracteres";
     }
