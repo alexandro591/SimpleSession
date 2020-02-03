@@ -48,16 +48,15 @@ router.post("/",function(request,response){
         var email = request.body.email.toLowerCase().split("@");
         var user = email[0];
         var emailProvider = email[1].toUpperCase().replace(/\./g,"*");
+        email=user+emailProvider
     } catch {
-        response.status(404).send('Ingrese un email válido');
-        response.end();
-        return null;
+        var email = request.body.email
     }
 
     var password = request.body.password;
 
     jwtClient.authorize(function(error, tokens) {
-        var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+tokens.access_token;
+        var urlaccounts=urlDatabase+"/accounts/"+email+".json?access_token="+tokens.access_token;
         axios.get(urlaccounts)
         .then(body=>{
             if(body.data!==null){
@@ -74,13 +73,13 @@ router.post("/",function(request,response){
                     })
                 }
                 else{
-                    response.status(404).send('Password incorrecto');
+                    response.write('Password incorrecto');
                     response.end();
                     return null;
                 }
             }
             else{
-                response.status(404).send('No existe ');
+                response.write('No existe ese usuario');
                 response.end();
                 return null;
             }
