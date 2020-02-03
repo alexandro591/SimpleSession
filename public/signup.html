@@ -37,7 +37,7 @@
             password1:password1,
             password2:password2
         }
-        $.post("https://sessionhandle.netlify.com/.netlify/functions/signup",data,
+        $.post("http://localhost:9000/.netlify/functions/signup",data,
         function(data){
             if(data==="success"){
                 alert("Registration successful. You will be redirected to the login menu")
