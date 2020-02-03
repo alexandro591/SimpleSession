@@ -13,8 +13,7 @@
     <input type="text" placeholder="cédula" id="ci"><br>
     <input type="text" placeholder="email" id="email"><br>
     <input type="text" placeholder="teléfono" id="phone"><br>
-    <input type="password" placeholder="password" id="password1"><br>
-    <input type="password" placeholder="password confirmation" id="password2"><br>
+    <input type="password" placeholder="password" id="pass"><br>
     <button onclick="send()">Sing In</button><br>
 </body>
 </html>
@@ -26,22 +25,20 @@
         ci=$("#ci").val();
         email=$("#email").val();
         phone=$("#phone").val();
-        password1=$("#password1").val();
-        password2=$("#password2").val();
+        pass=$("#pass").val();
         data = {
             name:name,
             sname:sname,
             ci:ci,
             email:email,
             phone:phone,
-            password1:password1,
-            password2:password2
+            pass:pass
         }
-        $.post("https://sessionhandle.netlify.com/.netlify/functions/signup",data,
+        $.post("https://sessionhandle.netlify.com/.netlify/functions/index/signin",data,
         function(data){
             if(data==="success"){
                 alert("Registration successful. You will be redirected to the login menu")
-                window.location.href="/login"
+                window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html"
             }
             else{
                 alert(data)

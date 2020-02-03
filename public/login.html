@@ -9,7 +9,7 @@
 </head>
 <body>
     <input type="text" placeholder="email" id="email">
-    <input type="password" placeholder="password" id="password">
+    <input type="password" placeholder="password" id="pass">
     <button onclick="send()">Log in</button>
 </body>
 </html>
@@ -18,19 +18,18 @@
     deleteAllCookies()
     function send(){
         email=$("#email").val();
-        password=$("#password").val();
+        pass=$("#pass").val();
         console.log(email);
-        console.log(password);
+        console.log(pass);
         data = {
             email:email,
-            password:password
+            pass:pass
         }
-        $.post("https://sessionhandle.netlify.com/.netlify/functions/login",data,
+        $.post("https://sessionhandle.netlify.com/.netlify/functions/index/login",data,
         function(data){
             if(data.includes("sessionID=")){
                 document.cookie = data;
-                console.log(window.location.href)
-                window.location.href="/main"
+                window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/main.html"
             }
             else{
                 window.alert(data)
