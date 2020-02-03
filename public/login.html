@@ -27,8 +27,8 @@
         }
         $.post("https://sessionhandle.netlify.com/.netlify/functions/login",data,
         function(data){
-            if(data.includes("sessionID=")){
-                document.cookie = data;
+            if(data.length===30){
+                document.cookie = "sessionID="+data;
                 positionOfUrl=window.location.href.indexOf("login")
                 window.location.href= window.location.href.substr(0,positionOfUrl)+"main.html"
             }
