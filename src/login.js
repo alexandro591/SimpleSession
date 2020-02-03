@@ -16,33 +16,29 @@ simpleSession.use(function(req, res, next) {
     next();
 });
 
-var accessToken;
-
 var {google} = require("googleapis");
 var serviceAccount = require("./appkey.json");
 var scopes = [
-  "https://www.googleapis.com/auth/userinfo.email",
-  "https://www.googleapis.com/auth/firebase.database"
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/firebase.database"
 ];
 
 var jwtClient = new google.auth.JWT(
-  serviceAccount.client_email,
-  null,
-  serviceAccount.private_key,
-  scopes
+    serviceAccount.client_email,
+    null,
+    serviceAccount.private_key,
+    scopes
 );
-
-jwtClient.authorize(function(error, tokens) {
-    accessToken = tokens.access_token;
-});
 
 urlDatabase = "https://simplesession-43caf.firebaseio.com"
 
 //get main route
 router.get("/",(request,response)=>{
-    response.write("Service running "+accessToken);
-    response.end();
-    return null;
+    jwtClient.authorize(function(error, tokens) {
+        response.write("Service running "+tokens.access_token);
+        response.end();
+        return null;
+    });
 });
 
 //login function
@@ -60,35 +56,37 @@ router.post("/",function(request,response){
 
     var password = request.body.password;
 
-    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+accessToken;
+    jwtClient.authorize(function(error, tokens) {
+        var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+tokens.access_token;
 
-    axios.get(urlaccounts)
-    .then(body=>{
-        if(body.data!==null){
-            if(body.data.password===password){
-                var cookie = randomId();
-                
-                var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+accessToken;
-
-                axios.put(urlaccounts,{value:cookie})
-                .then(()=>{
-                    response.write("sessionID="+cookie+";");
+        axios.get(urlaccounts)
+        .then(body=>{
+            if(body.data!==null){
+                if(body.data.password===password){
+                    var cookie = randomId();
+                    
+                    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+tokens.access_token;
+    
+                    axios.put(urlaccounts,{value:cookie})
+                    .then(()=>{
+                        response.write("sessionID="+cookie+";");
+                        response.end();
+                        return null;
+                    })
+                }
+                else{
+                    response.write("wrong password");
                     response.end();
                     return null;
-                })
+                }
             }
             else{
-                response.write("wrong password");
+                response.write("that user does not exist");
                 response.end();
                 return null;
             }
-        }
-        else{
-            response.write("that user does not exist");
-            response.end();
-            return null;
-        }
-    })
+        })
+    });
 });
 
 simpleSession.use("/.netlify/functions/login",router);

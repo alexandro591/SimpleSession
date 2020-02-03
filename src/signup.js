@@ -15,8 +15,6 @@ simpleSession.use(function(req, res, next) {
     next();
 });
 
-var accessToken;
-
 var {google} = require("googleapis");
 var serviceAccount = require("./appkey.json");
 var scopes = [
@@ -31,17 +29,15 @@ var jwtClient = new google.auth.JWT(
   scopes
 );
 
-jwtClient.authorize(function(error, tokens) {
-    accessToken = tokens.access_token;
-});
-
 urlDatabase = "https://simplesession-43caf.firebaseio.com"
 
 //get main route
 router.get("/",(request,response)=>{
-    response.write("Service running "+accessToken);
-    response.end();
-    return null;
+    jwtClient.authorize(function(error, tokens) {
+        response.write("Service running "+tokens.access_token);
+        response.end();
+        return null;
+    });
 });
 
 //signin function
@@ -84,24 +80,27 @@ router.post("/",function(request,response){
         password:password1,
     }
 
-    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+accessToken;
+    jwtClient.authorize(function(error, tokens) {
+        var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+tokens.access_token;
 
-    axios.get(urlaccounts)
-    .then(body=>{
-        if(body.data===null){
-            axios.put(urlaccounts,data)
-            .then(()=>{
-                response.write("success");
+        axios.get(urlaccounts)
+        .then(body=>{
+            if(body.data===null){
+                axios.put(urlaccounts,data)
+                .then(()=>{
+                    response.write("success");
+                    response.end();
+                    return null;
+                })
+            }
+            else{
+                response.write("that email is being used by another account");
                 response.end();
                 return null;
-            })
-        }
-        else{
-            response.write("that email is being used by another account");
-            response.end();
-            return null;
-        }
+            }
+        });
     });
+    
 });
 
 simpleSession.use("/.netlify/functions/signup",router);

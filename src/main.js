@@ -15,34 +15,29 @@ simpleSession.use(function(req, res, next) {
     next();
 });
 
-var accessToken;
-
 var {google} = require("googleapis");
 var serviceAccount = require("./appkey.json");
 var scopes = [
-  "https://www.googleapis.com/auth/userinfo.email",
-  "https://www.googleapis.com/auth/firebase.database"
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/firebase.database"
 ];
 
 var jwtClient = new google.auth.JWT(
-  serviceAccount.client_email,
-  null,
-  serviceAccount.private_key,
-  scopes
+    serviceAccount.client_email,
+    null,
+    serviceAccount.private_key,
+    scopes
 );
-
-jwtClient.authorize(function(error, tokens) {
-    accessToken = tokens.access_token;
-});
 
 urlDatabase = "https://simplesession-43caf.firebaseio.com"
 
 //get main route
 router.get("/",(request,response)=>{
-    response.write("Service running "+accessToken);
-    response.end();
-    return null;
-
+    jwtClient.authorize(function(error, tokens) {
+        response.write("Service running "+tokens.access_token);
+        response.end();
+        return null;
+    });
 });
 
 //main function
@@ -50,34 +45,36 @@ router.post("/",function(request,response){
     var cookieClient = request.body.cookie.split(";");
     console.log(cookieClient);
     cookieClient = cookieClient[0].replace("sessionID=","");
-
-    var urlaccounts=urlDatabase+"/accounts.json?access_token="+accessToken;
-    console.log(urlaccounts);
-    axios.get(urlaccounts)
-    .then(body=>{
-        var nItems = Object.keys(body.data).length;
-        for(i=0;i<nItems;i++){
-            try{
-                var client=Object.keys(body.data)[i].toString();
-                cookieServer=body.data[client].cookie.value;
-                console.log(cookieServer);
-                console.log(cookieClient);
-                if(cookieServer===cookieClient){
-                    params = body.data[client];
-                    console.log(params);
-                    response.header("Content-Type", "application/json");
-                    response.write(JSON.stringify(params));
-                    response.end();
-                    return null;
+    jwtClient.authorize(function(error, tokens) {
+        var urlaccounts=urlDatabase+"/accounts.json?access_token="+tokens.access_token;
+        console.log(urlaccounts);
+        axios.get(urlaccounts)
+        .then(body=>{
+            var nItems = Object.keys(body.data).length;
+            for(i=0;i<nItems;i++){
+                try{
+                    var client=Object.keys(body.data)[i].toString();
+                    cookieServer=body.data[client].cookie.value;
+                    console.log(cookieServer);
+                    console.log(cookieClient);
+                    if(cookieServer===cookieClient){
+                        params = body.data[client];
+                        console.log(params);
+                        response.header("Content-Type", "application/json");
+                        response.write(JSON.stringify(params));
+                        response.end();
+                        return null;
+                    }
+                }
+                catch{
                 }
             }
-            catch{
-            }
-        }
-        response.write("null");
-        response.end();
-        return null;
+            response.write("null");
+            response.end();
+            return null;
+        });
     });
+    
 });
 
 simpleSession.use("/.netlify/functions/main",router);
