@@ -53,7 +53,7 @@ router.post("/",function(request,response){
         return null;
     }
     jwtClient.authorize(function(error, tokens) {
-        var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+tokens.access_token;
+        var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/sessionID.json?access_token="+tokens.access_token;
         axios.delete(urlaccounts);
         response.write("ok");
         response.end();

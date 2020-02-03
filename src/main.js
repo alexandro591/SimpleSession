@@ -44,7 +44,7 @@ router.get("/",(request,response)=>{
 router.post("/",function(request,response){
     var cookieClient = request.body.cookie.split(";");
     console.log(cookieClient);
-    cookieClient = cookieClient[0].replace("sessionID=","");
+    sessionIDclient = cookieClient[0].replace("sessionID=","");
     jwtClient.authorize(function(error, tokens) {
         var urlaccounts=urlDatabase+"/accounts.json?access_token="+tokens.access_token;
         console.log(urlaccounts);
@@ -54,10 +54,10 @@ router.post("/",function(request,response){
             for(i=0;i<nItems;i++){
                 try{
                     var client=Object.keys(body.data)[i].toString();
-                    cookieServer=body.data[client].cookie.value;
-                    console.log(cookieServer);
-                    console.log(cookieClient);
-                    if(cookieServer===cookieClient){
+                    sessionIDserver=body.data[client].cookie.value;
+                    console.log(sessionIDclient);
+                    console.log(sessionIDserver);
+                    if(sessionIDserver===sessionIDclient){
                         params = body.data[client];
                         console.log(params);
                         response.header("Content-Type", "application/json");

@@ -10,7 +10,6 @@
 <body>
     <span id="welcomeMessage"></span>
     <button onclick="send()" id="btn">Log out</button>
-    <DIv ID="root"></DIv>
 </body>
 </html>
 
@@ -35,16 +34,18 @@
     function send(){
         try {
             credentials=credentials.email.split("@");
-            $.post("https://sessionhandle.netlify.com/.netlify/functions/index/deleteCookie",{
+            $.post("https://sessionhandle.netlify.com/.netlify/functions/deletesession",{
                 name:credentials[0].toLowerCase()+credentials[1].replace(".","*").toUpperCase()
             },
             function(data){
                 deleteAllCookies();
-                window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html"
+                positionOfUrl=window.location.href.indexOf("main")
+                window.location.href= window.location.href.substr(0,positionOfUrl)+"login.html"
             })
         } catch{
             deleteAllCookies();
-            window.location.href="https://raw.githack.com/alexandro591/SimpleSession/master/public/login.html" 
+            positionOfUrl=window.location.href.indexOf("main")
+            window.location.href= window.location.href.substr(0,positionOfUrl)+"login.html"
         }
     }
 </script>

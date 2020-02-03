@@ -58,18 +58,17 @@ router.post("/",function(request,response){
 
     jwtClient.authorize(function(error, tokens) {
         var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+tokens.access_token;
-
         axios.get(urlaccounts)
         .then(body=>{
             if(body.data!==null){
                 if(body.data.password===password){
-                    var cookie = randomId();
+                    var sessionID = randomId();
                     
-                    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/cookie.json?access_token="+tokens.access_token;
+                    var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+"/sessionID.json?access_token="+tokens.access_token;
     
-                    axios.put(urlaccounts,{value:cookie})
+                    axios.put(urlaccounts,{value:sessionID})
                     .then(()=>{
-                        response.write("sessionID="+cookie+";");
+                        response.write(sessionID);
                         response.end();
                         return null;
                     })

@@ -1,0 +1,52 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="cookieHandle.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" placeholder="nombre" id="name"><br>
+    <input type="text" placeholder="apellido" id="sname"><br>
+    <input type="text" placeholder="cédula" id="ci"><br>
+    <input type="text" placeholder="email" id="email"><br>
+    <input type="text" placeholder="teléfono" id="phone"><br>
+    <input type="password" placeholder="password" id="password1"><br>
+    <input type="password" placeholder="password confirmation" id="password2"><br>
+    <button onclick="send()">Sing In</button><br>
+</body>
+</html>
+
+<script>
+    function send(){
+        name=$("#name").val();
+        sname=$("#sname").val();
+        ci=$("#ci").val();
+        email=$("#email").val();
+        phone=$("#phone").val();
+        password1=$("#password1").val();
+        password2=$("#password2").val();
+        data = {
+            name:name,
+            sname:sname,
+            ci:ci,
+            email:email,
+            phone:phone,
+            password1:password1,
+            password2:password2
+        }
+        $.post("https://sessionhandle.netlify.com/.netlify/functions/signup",data,
+        function(data){
+            if(data==="success"){
+                alert("Registration successful. You will be redirected to the login menu")
+                positionOfUrl=window.location.href.indexOf("signup")
+                window.location.href= window.location.href.substr(0,positionOfUrl)+"login.html"
+            }
+            else{
+                alert(data)
+            }
+        });
+    }
+</script>
