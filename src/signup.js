@@ -95,20 +95,53 @@ router.post("/",function(request,response){
     }
 
     jwtClient.authorize(function(error, tokens) {
-        var urlaccounts=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+tokens.access_token;
+        var urlaccountsEmail=urlDatabase+"/accounts/"+user+emailProvider+".json?access_token="+tokens.access_token;
 
-        axios.get(urlaccounts)
+        axios.get(urlaccountsEmail)
         .then(body=>{
             if(body.data===null){
-                axios.put(urlaccounts,data)
-                .then(()=>{
-                    response.write("success");
-                    response.end();
-                    return null;
-                })
+
+                var urlaccountsPhone=urlDatabase+"/accounts/"+phone+".json?access_token="+tokens.access_token;
+
+                axios.get(urlaccountsPhone)
+                .then(body=>{
+                    if(body.data===null){
+                        var urlaccountsCI=urlDatabase+"/accounts/"+ci+".json?access_token="+tokens.access_token;
+
+                        axios.get(urlaccountsCI)
+                        .then(body=>{
+                            if(body.data===null){
+                                axios.put(urlaccountsEmail,data)
+                                .then(()=>{
+                                    axios.put(urlaccountsPhone,data)
+                                    .then(()=>{
+                                        axios.put(urlaccountsCI,data)
+                                        .then(()=>{
+                                            response.write("success");
+                                            response.end();
+                                            return null;
+                                        })
+                                    })
+                                })
+                            }
+                            else{
+                                errors.email="Esta cédula está siendo usada por otro usuario"
+                                response.status(404).json(errors);;
+                                response.end();
+                                return null;
+                            }
+                        });
+                    }
+                    else{
+                        errors.phone="Este teléfono está siendo usado por otro usuario"
+                        response.status(404).json(errors);;
+                        response.end();
+                        return null;
+                    }
+                });
             }
             else{
-                errors.email="Ese email está siendo usado por otro usuario"
+                errors.email="Este email está siendo usado por otro usuario"
                 response.status(404).json(errors);;
                 response.end();
                 return null;
