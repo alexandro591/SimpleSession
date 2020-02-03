@@ -27,6 +27,7 @@
         }
         $.post("https://sessionhandle.netlify.com/.netlify/functions/login",data,
         function(data){
+            window.alert(data)
             if(data.length===30){
                 document.cookie = "sessionID="+data;
                 positionOfUrl=window.location.href.indexOf("login")

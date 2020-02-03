@@ -54,7 +54,7 @@ router.post("/",function(request,response){
             for(i=0;i<nItems;i++){
                 try{
                     var client=Object.keys(body.data)[i].toString();
-                    sessionIDserver=body.data[client].cookie.value;
+                    sessionIDserver=body.data[client].sessionID.value;
                     console.log(sessionIDclient);
                     console.log(sessionIDserver);
                     if(sessionIDserver===sessionIDclient){
