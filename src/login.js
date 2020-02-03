@@ -10,8 +10,8 @@ simpleSession.use(bodyParser.json());
 simpleSession.use(bodyParser.urlencoded({ extended: true }));
 simpleSession.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); // If needed
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.header('Access-Control-Allow-Credentials', true);
     next();
 });
@@ -35,7 +35,7 @@ urlDatabase = "https://simplesession-43caf.firebaseio.com"
 //get main route
 router.get("/",(request,response)=>{
     jwtClient.authorize(function(error, tokens) {
-        response.write("Service running "+tokens.access_token);
+        response.write("Service running");
         response.end();
         return null;
     });
@@ -49,7 +49,7 @@ router.post("/",function(request,response){
         var user = email[0];
         var emailProvider = email[1].toUpperCase().replace(/\./g,"*");
     } catch {
-        response.write("Ingresa un email válido");
+        response.status(404).send('Ingrese un email válido');
         response.end();
         return null;
     }
@@ -74,13 +74,13 @@ router.post("/",function(request,response){
                     })
                 }
                 else{
-                    response.write("wrong password");
+                    response.status(404).send('Password incorrecto');
                     response.end();
                     return null;
                 }
             }
             else{
-                response.write("that user does not exist");
+                response.status(404).send('No existe ');
                 response.end();
                 return null;
             }

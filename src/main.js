@@ -9,8 +9,8 @@ simpleSession.use(bodyParser.json());
 simpleSession.use(bodyParser.urlencoded({ extended: true }));
 simpleSession.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE'); // If needed
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type'); // If needed
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.header('Access-Control-Allow-Credentials', true);
     next();
 });
@@ -34,7 +34,7 @@ urlDatabase = "https://simplesession-43caf.firebaseio.com"
 //get main route
 router.get("/",(request,response)=>{
     jwtClient.authorize(function(error, tokens) {
-        response.write("Service running "+tokens.access_token);
+        response.write("Service running");
         response.end();
         return null;
     });
@@ -59,6 +59,7 @@ router.post("/",function(request,response){
                     console.log(sessionIDserver);
                     if(sessionIDserver===sessionIDclient){
                         params = body.data[client];
+                        delete params.password;
                         console.log(params);
                         response.header("Content-Type", "application/json");
                         response.write(JSON.stringify(params));
@@ -69,12 +70,11 @@ router.post("/",function(request,response){
                 catch{
                 }
             }
-            response.write("null");
+            response.status(404).send('null');
             response.end();
             return null;
         });
     });
-    
 });
 
 simpleSession.use("/.netlify/functions/main",router);
