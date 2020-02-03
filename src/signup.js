@@ -65,24 +65,26 @@ router.post("/",function(request,response){
     if(name===""){
         errors.name="Ingrese este campo"
     }
-    else if(sname===""){
+    if(sname===""){
         errors.sname="Ingrese este campo";
     }
-    else if(ci.length!==10){
+    if(ci.length!==10){
         errors.ci="Ingrese una cédula correcta";
     }
-    else if(phone.length!==10 && phone.substr(0,2)!=="09" ){
+    if(phone.length!==10 && phone.substr(0,2)!=="09" ){
         errors.phone="Ingrese un teléfono válido";
     }
-    else if(password1!==password2 && password1.length<6){
-        errors.password="Las contraseñas deben ser idénticas y deben incluir al menos 6 caracteres";
+    if(password1!==password2 || password1.length<6){
+        errors.password1="Las contraseñas deben ser idénticas y deben incluir al menos 6 caracteres";
+        errors.password2="Las contraseñas deben ser idénticas y deben incluir al menos 6 caracteres";
     }
+
     if(!(Object.entries(errors).length === 0 && errors.constructor === Object)){
         response.status(404).json(errors);
         response.end();
         return null;     
     }
-    
+
     data={
         name:name,
         sname:sname,
