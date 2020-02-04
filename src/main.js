@@ -59,6 +59,12 @@ router.post("/",function(request,response){
                     console.log(sessionIDserver);
                     if(sessionIDserver===sessionIDclient){
                         params = body.data[client];
+                        if("provider" in params){
+                            params.isProvider = true;
+                        }
+                        else{
+                            params.isProvider = false;
+                        }
                         delete params.password;
                         console.log(params);
                         response.header("Content-Type", "application/json");

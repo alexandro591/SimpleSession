@@ -91,7 +91,7 @@ router.post("/",function(request,response){
         ci:ci,
         phone:phone,
         email:email,
-        password:password1,
+        password:password1
     }
 
     jwtClient.authorize(function(error, tokens) {

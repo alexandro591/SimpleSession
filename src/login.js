@@ -43,6 +43,9 @@ router.get("/",(request,response)=>{
 
 //login function
 router.post("/",function(request,response){
+
+    var errors={};
+
     //email handle
     try {
         var email = request.body.email.toLowerCase().split("@");
@@ -73,15 +76,17 @@ router.post("/",function(request,response){
                     })
                 }
                 else{
-                    response.write('Password incorrecto');
+                    errors.password="Password incorrecto";
+                    response.status(404).json(errors);
                     response.end();
-                    return null;
+                    return null;   
                 }
             }
             else{
-                response.write('No existe ese usuario');
+                errors.email="No existe ese usuario";
+                response.status(404).json(errors);
                 response.end();
-                return null;
+                return null;   
             }
         })
     });
